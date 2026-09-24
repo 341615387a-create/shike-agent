@@ -113,7 +113,7 @@ def make_handler(service, settings, port, public_mode=False, allowed_origins=Non
                     payload = json.loads(self.rfile.read(size))
                     if not isinstance(payload, dict):
                         raise ValueError("请求须为对象")
-                if method == "GET" and path in {"/", "/app.js", "/style.css"}:
+                if method == "GET" and path in {"/", "/app.js", "/demo-api.js", "/style.css"}:
                     file = ROOT / "web" / ("index.html" if path == "/" else path[1:])
                     return self.send(200, file.read_bytes(), (mimetypes.guess_type(file)[0] or "text/plain") + "; charset=utf-8")
                 if method == "GET" and path == "/api/config":
