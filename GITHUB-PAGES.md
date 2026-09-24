@@ -10,3 +10,5 @@
 4. 访问 `https://341615387a-create.github.io/shike-agent/`。
 
 这是静态交互演示：不连接 DeepSeek，不包含 API Key。新建对话、元素树、总结、归档和灵感笔记由浏览器内的演示数据层驱动，并保存在该浏览器的 `localStorage` 中。真实模型对话仍使用本地 Python 服务。
+
+仓库也包含 `wrangler.jsonc` 和 `worker/index.mjs`。将同一仓库连接到 Cloudflare Workers 后，Cloudflare 版本会通过 Worker Secret `DEEPSEEK_API_KEY` 调用真实的 `deepseek-chat`；模型密钥不会发送到浏览器。
