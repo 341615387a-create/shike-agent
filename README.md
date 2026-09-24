@@ -121,4 +121,6 @@ python -m unittest discover -s tests -v
 
 语义复核可能误判或遗漏，不等于真实性证明。最多进行一次修订，最终修订仍须通过结构、来源和开放聊天约束检查。模型可能过度解读、生成不够启发的问题；持续对话质量需要更多真实用户评估。
 
-旧版保留在相邻的 `inspiration-agent` 目录中，原数据库未迁移或改写。本版使用独立 `data/shike.sqlite3`，避免旧状态机数据误用。
+旧版保留在相邻的 `inspiration-agent` 目录中，原数据库未迁移或改写。本版使用独立的 `data/shike.sqlite3`，避免旧状态机数据误用。
+
+- [@kavelleyq](https://github.com/kavelleyq) — 共创者
