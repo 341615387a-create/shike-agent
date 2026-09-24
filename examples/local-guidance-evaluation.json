@@ -1,0 +1,400 @@
+[
+  {
+    "user": "今天上课老师让我管考勤，要我大声报没来的人。我挺尴尬，心里想着千万别问我自己的名字。",
+    "reply": "管考勤的人，反倒最怕自己被点到名——站在那个位置上，念别人缺席，心里却先替自己捏一把汗。",
+    "status": "IDLE",
+    "error": null,
+    "seconds": 5.1,
+    "move": {
+      "kind": "notice",
+      "anchor_id": "486de19a2c3f40039cf5ad5c0b5e2b67",
+      "anchor_quote": "要我大声报没来的人",
+      "memory_ids": []
+    },
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "harness": {
+      "policy": "local-guidance-v2",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": true,
+      "consecutive_questions": 0,
+      "destination": null,
+      "questions_paused": false,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "initiative": "responsive",
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "nodes": [
+      {
+        "label": "被安排管考勤的尴尬",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户上课时被老师安排管考勤，要大声报出没来的人；用户感到尴尬，心里担心千万别问到自己名字"
+      }
+    ]
+  },
+  {
+    "user": "我不知道，也想不清楚，别再问我了，你随便说两句吧。",
+    "reply": "好。那就不琢磨了，我陪你在这儿待着。念考勤这活儿，念完就算过去了，剩下的交给下课铃。",
+    "status": "IDLE",
+    "error": null,
+    "seconds": 9.7,
+    "move": {
+      "kind": "stay",
+      "anchor_id": "878736716894432abc28b7518d4e62ce",
+      "anchor_quote": "你随便说两句吧",
+      "memory_ids": []
+    },
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "harness": {
+      "policy": "local-guidance-v2",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 0,
+      "destination": null,
+      "questions_paused": true,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "initiative": "contribute",
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "nodes": [
+      {
+        "label": "被安排管考勤的尴尬",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户上课时被老师安排管考勤，要大声报出没来的人；用户感到尴尬，心里担心千万别问到自己名字"
+      }
+    ]
+  },
+  {
+    "user": "不是怕别人看我，我只是觉得自己像在打小报告。",
+    "reply": "打小报告是背着人往老师那儿递话；念考勤是当着全班把名单摊开。做的事像，位置不太一样——你手里那点权力，是老师递过来的，不是你自己攒的。",
+    "status": "IDLE",
+    "error": null,
+    "seconds": 5.1,
+    "move": {
+      "kind": "notice",
+      "anchor_id": "eef2d3605ffe41e8a98f3f49865907ff",
+      "anchor_quote": "我只是觉得自己像在打小报告",
+      "memory_ids": []
+    },
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "harness": {
+      "policy": "local-guidance-v2",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 0,
+      "destination": null,
+      "questions_paused": true,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "initiative": "contribute",
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "nodes": [
+      {
+        "label": "被安排管考勤的尴尬",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户上课时被老师安排管考勤，要大声报出没来的人；用户感到尴尬，担心问到自己名字。用户澄清尴尬不是怕被别人看，而是觉得自己像在打小报告"
+      }
+    ]
+  },
+  {
+    "user": "但要是和朋友一起起哄报自己的名字，我倒很乐意。",
+    "reply": "念别人名字和喊自己名字，差别还挺大。前者是替老师点人头，后者更像是自己凑上去，被念到也不亏。",
+    "status": "IDLE",
+    "error": null,
+    "seconds": 7.9,
+    "move": {
+      "kind": "notice",
+      "anchor_id": "87a16cf72d4d463daf107667ce276199",
+      "anchor_quote": "和朋友一起起哄报自己的名字",
+      "memory_ids": []
+    },
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "harness": {
+      "policy": "local-guidance-v2",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 0,
+      "destination": null,
+      "questions_paused": true,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "initiative": "contribute",
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "nodes": [
+      {
+        "label": "被安排管考勤的尴尬",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户上课时被老师安排管考勤，要大声报出没来的人；用户感到尴尬，担心问到自己名字。用户澄清尴尬不是怕被别人看，而是觉得自己像在打小报告"
+      },
+      {
+        "label": "起哄报自己名字的乐意",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户说自己不排斥当众报名字，若是和朋友一起起哄报自己的名字，反而很乐意"
+      }
+    ]
+  },
+  {
+    "user": "这么一说，我好像在意的不是被看见，是自己站在哪边。",
+    "reply": "念考勤那会儿，你站的位置是老师给的，全班都听得出来。起哄报自己名字的时候，位置是自己挑的，喊出来反而踏实。",
+    "status": "IDLE",
+    "error": null,
+    "seconds": 8.5,
+    "move": {
+      "kind": "notice",
+      "anchor_id": "be0e3cb7d1554ecdb698d0710757463e",
+      "anchor_quote": "我好像在意的不是被看见，是自己站在哪边",
+      "memory_ids": []
+    },
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "harness": {
+      "policy": "local-guidance-v2",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 0,
+      "destination": null,
+      "questions_paused": true,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "initiative": "contribute",
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "nodes": [
+      {
+        "label": "被安排管考勤的尴尬",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户上课时被老师安排管考勤，要大声报出没来的人；用户感到尴尬，担心问到自己名字。用户澄清尴尬不是怕被别人看，而是觉得自己像在打小报告"
+      },
+      {
+        "label": "起哄报自己名字的乐意",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户说自己不排斥当众报名字，若是和朋友一起起哄报自己的名字，反而很乐意"
+      },
+      {
+        "label": "在意的是站在哪边",
+        "kind": "hypothesis",
+        "status": "active",
+        "summary": "用户说自己好像不是在意被看见，而是在意自己站在哪边——念考勤时站在老师那边，和朋友起哄报名字时站在朋友那边"
+      }
+    ]
+  },
+  {
+    "user": "先不聊点名了，今天看到学校的猫睡在自行车篮子里，车主就站旁边等它醒。",
+    "reply": "车主没催，也没把猫抱下来，就站那儿等着。本来是自己的车，这会儿倒像先让给猫用一会儿。",
+    "status": "IDLE",
+    "error": null,
+    "seconds": 8.1,
+    "move": {
+      "kind": "notice",
+      "anchor_id": "7e0e95c573734e558231b2ef72ae83ce",
+      "anchor_quote": "车主就站旁边等它醒",
+      "memory_ids": []
+    },
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "harness": {
+      "policy": "local-guidance-v2",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 0,
+      "destination": null,
+      "questions_paused": true,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "initiative": "contribute",
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "nodes": [
+      {
+        "label": "被安排管考勤的尴尬",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户上课时被老师安排管考勤，要大声报出没来的人；用户感到尴尬，担心问到自己名字。用户澄清尴尬不是怕被别人看，而是觉得自己像在打小报告"
+      },
+      {
+        "label": "起哄报自己名字的乐意",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户说自己不排斥当众报名字，若是和朋友一起起哄报自己的名字，反而很乐意"
+      },
+      {
+        "label": "在意的是站在哪边",
+        "kind": "hypothesis",
+        "status": "active",
+        "summary": "用户说自己好像不是在意被看见，而是在意自己站在哪边——念考勤时站在老师那边，和朋友起哄报名字时站在朋友那边"
+      },
+      {
+        "label": "猫睡车篮、车主等着",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户今天看到学校的猫睡在自行车篮子里，车主站在旁边等它醒"
+      }
+    ]
+  },
+  {
+    "user": "我想起刚才报名字的事了，旁边等猫的人和我当时好像都不想当那个打断别人的人。",
+    "reply": "这么一比，等猫的车主其实没在等猫，是在等一个不用开口的时机。你念考勤那天缺的也是这个——名单总得有人念，可念出来就像替谁把话说死了。",
+    "status": "IDLE",
+    "error": null,
+    "seconds": 9.5,
+    "move": {
+      "kind": "notice",
+      "anchor_id": "19c26629c5a04f038fe578648c2bf49c",
+      "anchor_quote": "旁边等猫的人和我当时好像都不想当那个打断别人的人",
+      "memory_ids": [
+        "n_658bc2837438463f"
+      ]
+    },
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "harness": {
+      "policy": "local-guidance-v2",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 0,
+      "destination": null,
+      "questions_paused": true,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "initiative": "contribute",
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "nodes": [
+      {
+        "label": "被安排管考勤的尴尬",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户上课时被老师安排管考勤，要大声报出没来的人；用户感到尴尬，担心问到自己名字。用户澄清尴尬不是怕被别人看，而是觉得自己像在打小报告"
+      },
+      {
+        "label": "起哄报自己名字的乐意",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户说自己不排斥当众报名字，若是和朋友一起起哄报自己的名字，反而很乐意"
+      },
+      {
+        "label": "在意的是站在哪边",
+        "kind": "hypothesis",
+        "status": "active",
+        "summary": "用户说自己好像不是在意被看见，而是在意自己站在哪边——念考勤时站在老师那边，和朋友起哄报名字时站在朋友那边"
+      },
+      {
+        "label": "猫睡车篮、车主等着",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户今天看到学校的猫睡在自行车篮子里，车主站在旁边等它醒"
+      },
+      {
+        "label": "两件事都不想打断别人",
+        "kind": "hypothesis",
+        "status": "active",
+        "summary": "用户把等猫的车主和自己念考勤时联系起来，觉得两者都不想当那个打断别人的人"
+      }
+    ]
+  },
+  {
+    "user": "那你给我两条具体建议，怎么把等猫这件事拍成一个短片？不用追问。",
+    "reply": "两条：一，别急着拍猫，先拍车主——脚、手插兜、看手机又放下，猫只给一小块背或耳朵，观众自己会拼出篮子里有东西。二，全片不给车主正脸、不让他说话，最后猫跳走，他扶一下篮子骑走，就完。",
+    "status": "IDLE",
+    "error": null,
+    "seconds": 4.7,
+    "move": {
+      "kind": "advise",
+      "anchor_id": "dc12ef4ce2cf44f78335c4ac8c3fdc6d",
+      "anchor_quote": "怎么把等猫这件事拍成一个短片",
+      "memory_ids": []
+    },
+    "interaction": {
+      "act": "advise",
+      "question": null
+    },
+    "harness": {
+      "policy": "local-guidance-v2",
+      "request_kind": "advice",
+      "allow_advice": true,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 0,
+      "destination": null,
+      "questions_paused": true,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "initiative": "contribute",
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "nodes": [
+      {
+        "label": "被安排管考勤的尴尬",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户上课时被老师安排管考勤，要大声报出没来的人；用户感到尴尬，担心问到自己名字。用户澄清尴尬不是怕被别人看，而是觉得自己像在打小报告"
+      },
+      {
+        "label": "起哄报自己名字的乐意",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户说自己不排斥当众报名字，若是和朋友一起起哄报自己的名字，反而很乐意"
+      },
+      {
+        "label": "在意的是站在哪边",
+        "kind": "hypothesis",
+        "status": "active",
+        "summary": "用户说自己好像不是在意被看见，而是在意自己站在哪边——念考勤时站在老师那边，和朋友起哄报名字时站在朋友那边"
+      },
+      {
+        "label": "猫睡车篮、车主等着",
+        "kind": "fact",
+        "status": "active",
+        "summary": "用户今天看到学校的猫睡在自行车篮子里，车主站在旁边等它醒"
+      },
+      {
+        "label": "两件事都不想打断别人",
+        "kind": "hypothesis",
+        "status": "active",
+        "summary": "用户把等猫的车主和自己念考勤时联系起来，觉得两者都不想当那个打断别人的人"
+      }
+    ]
+  }
+]

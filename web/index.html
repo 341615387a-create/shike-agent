@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f6f0">
+  <title>拾刻 · 让理解慢慢生长</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#"><span class="brand-mark">拾</span><span>拾刻<small>THOUGHTS IN GROWTH</small></span></a>
+    <button class="new-chat" data-action="home">＋ 开始一段探索</button>
+    <div class="nav-label">最近的思路</div>
+    <nav id="sessions" aria-label="历史会话"></nav>
+    <div class="sidebar-bottom"><button data-action="profile">◌ 关于你</button><button data-action="cards">▤ 灵感笔记</button><button data-action="settings">⚙ 模型设置 <span id="connection-dot" class="dot"></span></button><button class="mobile-history" data-action="history" aria-expanded="false" aria-controls="sessions">历史聊天</button><p>不急着抵达一个答案。</p></div>
+  </aside>
+  <div id="app" class="app" aria-live="polite"></div>
+  <div id="toast" role="status" hidden></div>
+  <dialog id="settings-dialog">
+    <form id="settings-form">
+      <div class="dialog-head"><div><span class="eyebrow">连接你的模型</span><h2>让对话真正开始</h2></div><button type="button" data-action="close-settings" aria-label="关闭">×</button></div>
+      <label>API 基础地址<input id="base-url" type="url" required placeholder="https://api.deepseek.com"></label>
+      <label>模型名称<input id="model-name" required placeholder="deepseek-chat"></label>
+      <label>API Key<input id="api-key" type="password" autocomplete="new-password" placeholder="填写密钥"></label>
+      <p class="muted small">密钥仅保存在本机 data/settings.json；对话上下文会发送给你配置的模型服务。</p>
+      <p id="settings-result" role="status"></p>
+      <button class="primary" type="submit" id="connect-button">测试连接并保存 ↗</button>
+    </form>
+  </dialog>
+</body>
+</html>

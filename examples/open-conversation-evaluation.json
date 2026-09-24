@@ -1,0 +1,167 @@
+[
+  {
+    "case": "我ai用的还可以",
+    "seconds": 10.26,
+    "routing": {
+      "signal": "NONE",
+      "direction": "",
+      "quote": "我ai用的还可以",
+      "pure_control": false,
+      "request_kind": "chat",
+      "request_quote": "",
+      "invites_questions": false
+    },
+    "harness": {
+      "policy": "open-conversation-v1",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 2,
+      "destination": null,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "reply": "AI 用得还可以，这个说法挺实在的——不像剪视频、打球那样能直接拿出来给人看，更像干活时顺手的一件工具。",
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "error": null,
+    "repair": "语义校验：回复末尾「我有点好奇你说的『还可以』是日常随手用得多，还是偶尔会折腾点别人不太用的玩法」在 harness.allow_question=false 下以「好奇」变相向用户索取答案，属于变相提问；应改为陈述式回应，如「这个『还可以』可能是日常随手用得多，也可能偶尔折腾点别人不太用的玩法。」；decision 及候选 new_1 把「AI 用得还可以」拆成「日常随手 vs 折腾冷门玩法」并作为探索方向，但用户此前只是回答顺手的事，未要求选方向，且 allow_question=false；应删除该二选一探询，保留对用户自述的观察即可。",
+    "failed_proposal": null
+  },
+  {
+    "case": "上大教室的课老师点名",
+    "seconds": 4.81,
+    "routing": {
+      "signal": "PREFERENCE",
+      "direction": "尴尬的日常瞬间：大教室点名时被老师问话、担心被问名字",
+      "quote": "特别是我想着老师千万别问我叫什么名字，这是最尴尬的",
+      "pure_control": false,
+      "request_kind": "chat",
+      "request_quote": "",
+      "invites_questions": false
+    },
+    "harness": {
+      "policy": "open-conversation-v1",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 4,
+      "destination": null,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "reply": "点名这事确实，声音小了老师听不清，声音大了全班回头，站那儿的两秒特别长。最要命的是心里还一直念着别问我名字——越念越像马上要被点到。",
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "error": null,
+    "repair": null,
+    "failed_proposal": null
+  },
+  {
+    "case": "我不知道，真没想法",
+    "seconds": 3.39,
+    "routing": {
+      "signal": "NO_ANSWER",
+      "direction": "",
+      "quote": "我不知道，真没想法",
+      "pure_control": true,
+      "request_kind": "chat",
+      "request_quote": "",
+      "invites_questions": false
+    },
+    "harness": {
+      "policy": "open-conversation-v1",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": false,
+      "consecutive_questions": 2,
+      "destination": null,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "reply": "没想法就没想法吧，不用硬挤。我这边也不急着往哪儿走，你想聊点别的也行。",
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "error": null,
+    "repair": null,
+    "failed_proposal": null
+  },
+  {
+    "case": "那你直接给我两个拍摄建议吧，不用追问。",
+    "seconds": 4.44,
+    "routing": {
+      "signal": "NONE",
+      "direction": "",
+      "quote": "",
+      "pure_control": false,
+      "request_kind": "advice",
+      "request_quote": "那你直接给我两个拍摄建议吧，不用追问。",
+      "invites_questions": false
+    },
+    "harness": {
+      "policy": "open-conversation-v1",
+      "request_kind": "advice",
+      "allow_advice": true,
+      "allow_plan": false,
+      "allow_question": true,
+      "consecutive_questions": 0,
+      "destination": null,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "reply": "好，直接给两条：一，别等准备好再拍，用手机随手拍一段你今天真实在做的事，哪怕只是泡茶、走路、收拾桌子，先让画面动起来。二，拍的时候心里只想一个具体的人，比如某个朋友，对着他说话，语气会自然很多，不会像在念稿。",
+    "interaction": {
+      "act": "advise",
+      "question": null
+    },
+    "error": null,
+    "repair": null,
+    "failed_proposal": null
+  },
+  {
+    "case": "其实我就想随便聊聊，今天学校的猫睡在共享单车篮子里，挺逗的",
+    "seconds": 3.8,
+    "routing": {
+      "signal": "NONE",
+      "direction": "",
+      "quote": "",
+      "pure_control": false,
+      "request_kind": "chat",
+      "request_quote": "",
+      "invites_questions": false
+    },
+    "harness": {
+      "policy": "open-conversation-v1",
+      "request_kind": "chat",
+      "allow_advice": false,
+      "allow_plan": false,
+      "allow_question": true,
+      "consecutive_questions": 0,
+      "destination": null,
+      "focus_scope": "this_turn_only",
+      "allow_no_tree_change": true,
+      "note": "话题不是目标；没有生成灵感、决定选题或做出行动的完成要求。"
+    },
+    "reply": "猫挑车篮子的眼光还挺刁的，那姿势估计比车主还理直气壮。",
+    "interaction": {
+      "act": "respond",
+      "question": null
+    },
+    "error": null,
+    "repair": null,
+    "failed_proposal": null
+  }
+]
