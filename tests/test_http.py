@@ -70,4 +70,53 @@ class HttpTests(unittest.TestCase):
         self.assertTrue(self.server.restart_requested)
 
 
+class PublicHttpTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp=tempfile.TemporaryDirectory()
+        settings=Settings(Path(cls.tmp.name)/'settings.json')
+        settings.path.write_text(json.dumps({'base_url':'https://api.example.com','model':'example','api_key':'test-secret'}))
+        cls.service=Service(Path(cls.tmp.name)/'db.sqlite3',settings,background=False)
+        cls.server=ThreadingHTTPServer(('127.0.0.1',0),lambda *args:None)
+        cls.port=cls.server.server_port
+        cls.server.RequestHandlerClass=make_handler(
+            cls.service,settings,cls.port,True,{'https://public.example'},{'public.example'},'x'*32,1)
+        cls.thread=threading.Thread(target=cls.server.serve_forever,daemon=True);cls.thread.start()
+    @classmethod
+    def tearDownClass(cls):
+        cls.server.shutdown();cls.server.server_close();cls.thread.join();cls.tmp.cleanup()
+    def request(self,path='/',data=None,cookie=None,origin=None,forwarded=None):
+        headers={'Host':'public.example'}
+        if data is not None:headers['Content-Type']='application/json'
+        if cookie:headers['Cookie']=cookie
+        if origin:headers['Origin']=origin
+        if forwarded:headers['X-Forwarded-For']=forwarded
+        req=urllib.request.Request(f'http://127.0.0.1:{self.port}'+path,data=data,headers=headers)
+        return urllib.request.urlopen(req,timeout=3)
+    def workspace_cookie(self):
+        with self.request('/api/config') as response:
+            self.assertTrue(json.load(response)['public_mode'])
+            return response.headers['Set-Cookie'].split(';',1)[0]
+    def test_public_cookie_is_signed_secure_and_settings_are_locked(self):
+        with self.request('/api/config') as response:
+            cookie=response.headers['Set-Cookie']
+        self.assertIn('HttpOnly',cookie);self.assertIn('Secure',cookie);self.assertIn('SameSite=Lax',cookie)
+        with self.assertRaises(urllib.error.HTTPError) as error:
+            self.request('/api/settings',b'{}',cookie.split(';',1)[0],origin='https://public.example')
+        self.assertEqual(error.exception.code,403);error.exception.close()
+    def test_public_workspaces_are_isolated_and_rate_limited(self):
+        first,second=self.workspace_cookie(),self.workspace_cookie()
+        payload=lambda text:json.dumps({'text':text,'request_id':'request-'+text},ensure_ascii=False).encode()
+        with self.request('/api/sessions',payload('甲'),first,'https://public.example','203.0.113.1') as response:
+            created=json.load(response)
+        with self.request('/api/sessions',cookie=first) as response:self.assertEqual(len(json.load(response)),1)
+        with self.request('/api/sessions',cookie=second) as response:self.assertEqual(json.load(response),[])
+        with self.assertRaises(urllib.error.HTTPError) as hidden:
+            self.request('/api/sessions/'+created['id'],cookie=second)
+        self.assertEqual(hidden.exception.code,404);hidden.exception.close()
+        with self.assertRaises(urllib.error.HTTPError) as limited:
+            self.request('/api/sessions',payload('再来一轮'),first,'https://public.example','203.0.113.1')
+        self.assertEqual(limited.exception.code,429);limited.exception.close()
+
+
 if __name__=='__main__':unittest.main()

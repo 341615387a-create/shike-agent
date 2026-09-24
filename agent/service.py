@@ -67,57 +67,63 @@ class Service:
             finally:
                 db.close()
 
-    def read(self, db, sid):
+    def read(self, db, sid, owner_id=None):
         row = db.execute("SELECT data FROM sessions WHERE id=?", (sid,)).fetchone()
         if not row:
             raise KeyError("会话不存在")
-        return json.loads(row[0])
+        session = json.loads(row[0])
+        if owner_id is not None and session.get("owner_id", "default") != owner_id:
+            raise KeyError("会话不存在")
+        return session
 
     def write(self, db, s):
         db.execute("INSERT INTO sessions VALUES (?,?) ON CONFLICT(id) DO UPDATE SET data=excluded.data",
                    (s["id"], json.dumps(s, ensure_ascii=False)))
 
-    def read_profile(self, db):
-        row = db.execute("SELECT data FROM profile WHERE id='default'").fetchone()
+    def read_profile(self, db, owner_id="default"):
+        row = db.execute("SELECT data FROM profile WHERE id=?", (owner_id,)).fetchone()
         return json.loads(row[0]) if row else empty_profile()
 
-    def write_profile(self, db, profile):
-        db.execute("INSERT INTO profile VALUES ('default',?) ON CONFLICT(id) DO UPDATE SET data=excluded.data",
-                   (json.dumps(profile, ensure_ascii=False),))
+    def write_profile(self, db, profile, owner_id="default"):
+        db.execute("INSERT INTO profile VALUES (?,?) ON CONFLICT(id) DO UPDATE SET data=excluded.data",
+                   (owner_id, json.dumps(profile, ensure_ascii=False)))
 
     @staticmethod
     def public(s):
-        return {k: copy.deepcopy(v) for k, v in s.items() if k not in {"job", "pending", "diagnostic"}}
+        return {k: copy.deepcopy(v) for k, v in s.items()
+                if k not in {"job", "pending", "diagnostic", "owner_id"}}
 
-    def get(self, sid):
+    def get(self, sid, owner_id="default"):
         with self.db() as db:
-            return self.public(self.read(db, sid))
+            return self.public(self.read(db, sid, owner_id))
 
-    def list(self):
+    def list(self, owner_id="default"):
         with self.db() as db:
-            sessions = [json.loads(r[0]) for r in db.execute("SELECT data FROM sessions")]
+            sessions = [s for s in (json.loads(r[0]) for r in db.execute("SELECT data FROM sessions"))
+                        if s.get("owner_id", "default") == owner_id]
         return sorted([{k: s[k] for k in ("id", "title", "updated_at", "status", "mode")} for s in sessions],
                       key=lambda s: s["updated_at"], reverse=True)
 
-    def profile(self):
+    def profile(self, owner_id="default"):
         with self.db() as db:
-            return public_profile(self.read_profile(db))
+            return public_profile(self.read_profile(db, owner_id))
 
-    def profile_event(self, payload):
+    def profile_event(self, payload, owner_id="default"):
         action = payload.get('action')
         if action not in {'reject', 'restore', 'forget'}:
             raise ValueError('未知的个人记忆操作')
         request = payload.get('request_id')
         if not isinstance(request, str) or not 8 <= len(request) <= 100:
             raise ValueError('请求需要有效的 request_id')
-        fingerprint = hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+        fingerprint = hashlib.sha256(json.dumps({"owner_id": owner_id, **payload}, sort_keys=True,
+                                                ensure_ascii=False).encode()).hexdigest()
         with self.db() as db:
             row = db.execute('SELECT fingerprint FROM profile_receipts WHERE id=?', (request,)).fetchone()
             if row:
                 if row[0] != fingerprint:
                     raise Conflict('同一请求编号不能用于不同内容。')
-                return public_profile(self.read_profile(db))
-            profile = self.read_profile(db)
+                return public_profile(self.read_profile(db, owner_id))
+            profile = self.read_profile(db, owner_id)
             if payload.get('version') != profile['version']:
                 raise Conflict('个人记忆已更新，请刷新后再操作。')
             key = payload.get('node_id')
@@ -137,7 +143,7 @@ class Service:
                                          'status': node['status'], 'message_ids': [], 'user_action': action})
             profile['version'] += 1
             profile['updated_at'] = now()
-            self.write_profile(db, profile)
+            self.write_profile(db, profile, owner_id)
             db.execute('INSERT INTO profile_receipts VALUES (?,?)', (request, fingerprint))
             return public_profile(profile)
 
@@ -167,21 +173,22 @@ class Service:
         s.update(status="ACTIVE", job=uid(), request_status="GENERATING", error=None, response_stopped=False,
                  pending={"task": task, "context": self.context(s, task, focus, profile)})
 
-    def create(self, text, request_id):
+    def create(self, text, request_id, owner_id="default"):
         text = self.check_text(text)
         with self.db() as db:
-            existing, fingerprint = self.receipt(db, request_id, {"create": text})
+            existing, fingerprint = self.receipt(db, request_id, {"owner_id": owner_id, "create": text})
             if existing:
-                return self.public(self.read(db, existing))
+                return self.public(self.read(db, existing, owner_id))
             s = {"id": uid(), "title": text[:32], "status": "ACTIVE", "mode": "DISCOVER", "version": 1,
                  "created_at": now(), "updated_at": now(), "messages": [], "nodes": {}, "focus": None,
-                 "decision": None, "candidates": [], "path": [], "reflection": None, "saved_cards": []}
+                 "decision": None, "candidates": [], "path": [], "reflection": None, "saved_cards": [],
+                 "owner_id": owner_id}
             self.add_message(s, text)
-            self.stage(s, "message", profile=self.read_profile(db))
+            self.stage(s, "message", profile=self.read_profile(db, owner_id))
             self.write(db, s)
             db.execute("INSERT INTO receipts VALUES (?,?,?)", (request_id, fingerprint, s["id"]))
         self.launch(s)
-        return self.get(s["id"])
+        return self.get(s["id"], owner_id)
 
     @staticmethod
     def check_text(text):
@@ -193,15 +200,16 @@ class Service:
         last = next((m["text"] for m in reversed(s["messages"]) if m["role"] == "assistant"), "")
         s["messages"].append({"id": uid(), "role": "user", "text": text, "at": now(), "question": last})
 
-    def event(self, sid, payload):
+    def event(self, sid, payload, owner_id="default"):
         action = payload.get("action")
         allowed = {"message", "focus", "change", "skip", "reflect", "retry", "pause", "stop", "resume", "finish", "save"}
         if action not in allowed:
             raise ValueError("未知操作")
         run = False
         with self.db() as db:
-            s = self.read(db, sid)
-            existing, fingerprint = self.receipt(db, payload.get("request_id"), {"sid": sid, **payload})
+            s = self.read(db, sid, owner_id)
+            existing, fingerprint = self.receipt(
+                db, payload.get("request_id"), {"owner_id": owner_id, "sid": sid, **payload})
             if existing:
                 return self.public(s)
             if payload.get("version") != s["version"]:
@@ -220,7 +228,7 @@ class Service:
                     action = command
                 else:
                     self.add_message(s, text)
-                    self.stage(s, "message", profile=self.read_profile(db))
+                    self.stage(s, "message", profile=self.read_profile(db, owner_id))
                     run = True
             if action in {"focus", "change", "skip", "reflect"}:
                 focus = payload.get("node_id") if action == "focus" else None
@@ -229,7 +237,7 @@ class Service:
                 if focus:
                     s["focus"] = focus
                 s["path"].append({"id": uid(), "type": "control", "action": action, "at": now(), "focus": focus})
-                self.stage(s, action, focus, self.read_profile(db))
+                self.stage(s, action, focus, self.read_profile(db, owner_id))
                 run = True
             elif action == "retry":
                 if s["request_status"] != "ERROR" or not s.get("pending"):
@@ -258,7 +266,8 @@ class Service:
                 if not s.get("reflection"):
                     raise Conflict("先整理本次思路，再编辑保存。")
                 content = self.check_text(payload.get("text"))
-                card = {"id": uid(), "session_id": sid, "title": s["title"], "text": content,
+                card = {"id": uid(), "session_id": sid, "owner_id": owner_id,
+                        "title": s["title"], "text": content,
                         "at": now(), "source_message_id": s["reflection"]["message_id"]}
                 db.execute("INSERT INTO cards VALUES (?,?)", (card["id"], json.dumps(card, ensure_ascii=False)))
                 s["saved_cards"].append(card["id"])
@@ -268,7 +277,7 @@ class Service:
             db.execute("INSERT INTO receipts VALUES (?,?,?)", (payload["request_id"], fingerprint, sid))
         if run:
             self.launch(s)
-        return self.get(sid)
+        return self.get(sid, owner_id)
 
     def launch(self, s):
         if self.background:
@@ -277,6 +286,7 @@ class Service:
     def generate(self, sid, job, snapshot):
         stage = "排队等待"
         started = time.monotonic()
+        owner_id = snapshot.get("owner_id", "default")
         try:
             with self.capacity:
                 with self.db() as db:
@@ -320,13 +330,13 @@ class Service:
                 s = self.read(db, sid)
                 if s.get("job") != job or s["status"] != "ACTIVE":
                     return  # Paused, ended or superseded while the network call was in flight.
-                profile = self.read_profile(db)
+                profile = self.read_profile(db, owner_id)
                 profile_changed, profile_error = [], None
                 try:
                     profile, profile_changed = apply_profile_changes(
                         profile, proposal.get('profile_changes', []), context, sid, now())
                     if profile_changed:
-                        self.write_profile(db, profile)
+                        self.write_profile(db, profile, owner_id)
                 except FormatError as exc:
                     # Personalization is optional metadata. A bad extraction must
                     # never hide an otherwise valid conversational reply.
@@ -374,7 +384,9 @@ class Service:
                     s["version"] += 1
                     self.write(db, s)
 
-    def cards(self):
+    def cards(self, owner_id="default"):
         with self.db() as db:
-            return sorted([json.loads(r[0]) for r in db.execute("SELECT data FROM cards")],
+            cards = [card for card in (json.loads(r[0]) for r in db.execute("SELECT data FROM cards"))
+                     if card.get("owner_id", "default") == owner_id]
+            return sorted(cards,
                           key=lambda x: x["at"], reverse=True)

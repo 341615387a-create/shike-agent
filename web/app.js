@@ -14,6 +14,7 @@ async function api(path,data){
 }
 async function config(){
   state.config=await api('/config');const s=state.config.settings;
+  document.body.classList.toggle('public-mode',Boolean(state.config.public_mode));
   $('#connection-dot').className='dot '+(s.health==='connected'?'ready':s.health==='error'?'error':'');
   if(!state.config.build&&location.port==='8780'){
     // Retire the old server before rendering controls or posting any events.
@@ -33,7 +34,7 @@ async function sidebar(){const sessions=await api('/sessions');const link=s=>`<a
 function composer(home=false){const text=store.get(draftKey());return `<form id="message-form" class="composer"><textarea id="message-input" maxlength="12000" aria-label="你的想法" placeholder="${home?'一段经历、一个困惑，或还没想明白的念头……':'说说刚想到的，也可以说「不知道」……'}">${esc(text)}</textarea><div class="composer-footer"><span>${home?'从你此刻想到的开始。':'Enter 发送 · Shift + Enter 换行'}</span><button class="primary" type="submit" ${state.loading?'disabled':''}>${home?'开始聊聊':'发送'} ↗</button></div></form>`;}
 function home(){
   const health=state.config?.settings;
-  $('#app').innerHTML=`<main class="home"><div class="home-top"><span class="eyebrow">A SPACE FOR UNFINISHED THOUGHTS</span><span class="edition">拾刻 · 元素树</span></div><h1>一个念头，<br>也可以长出<em>很多可能。</em></h1><p class="lead">把正在发生的事带来。<br>我们从这里出发，聊到哪里，就从哪里接下去。</p>${health?.health==='error'?`<div class="notice">模型连接需要更新。<button data-action="settings">打开设置</button></div>`:''}${composer(true)}<div class="home-notes"><div class="home-note"><span>01 &nbsp; 从一个细节开始</span><p>不需要完整的想法。今天吃了一顿饭，也可以成为起点。</p></div><div class="home-note"><span>02 &nbsp; 顺着理解生长</span><p>同一种理解慢慢深入，新的感受长出另一条分支。</p></div><div class="home-note"><span>03 &nbsp; 聊着聊着，也许会想到</span><p>可以接住一个联想，也可以推翻它。没有结论也没关系。</p></div></div><button class="text-link" data-action="example">看看一棵树如何生长 ↗</button></main>`;
+  $('#app').innerHTML=`<main class="home"><div class="home-top"><span class="eyebrow">A SPACE FOR UNFINISHED THOUGHTS</span><span class="edition">拾刻 · 元素树</span></div><h1>一个念头，<br>也可以长出<em>很多可能。</em></h1><p class="lead">把正在发生的事带来。<br>我们从这里出发，聊到哪里，就从哪里接下去。</p>${state.config?.public_mode?'<p class="public-note">公开测试版 · 对话会保存在这个浏览器对应的独立空间，并发送给模型服务生成回复。清除浏览器 Cookie 后无法找回原记录。</p>':''}${health?.health==='error'?`<div class="notice">${state.config?.public_mode?'对话服务暂时不可用，请稍后再试。':'模型连接需要更新。<button data-action="settings">打开设置</button>'}</div>`:''}${composer(true)}<div class="home-notes"><div class="home-note"><span>01 &nbsp; 从一个细节开始</span><p>不需要完整的想法。今天吃了一顿饭，也可以成为起点。</p></div><div class="home-note"><span>02 &nbsp; 顺着理解生长</span><p>同一种理解慢慢深入，新的感受长出另一条分支。</p></div><div class="home-note"><span>03 &nbsp; 聊着聊着，也许会想到</span><p>可以接住一个联想，也可以推翻它。没有结论也没关系。</p></div></div><button class="text-link" data-action="example">看看一棵树如何生长 ↗</button></main>`;
 }
 const profileCategories={identity:'身份与经历',work:'职业与能力',ongoing:'正在做的事',interests:'兴趣与偏好',interaction:'怎样和你交流',thinking:'思考方式 · 待确认'};
 function renderProfile(){

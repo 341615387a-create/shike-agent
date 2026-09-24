@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: shike-agent
+    runtime: python
+    plan: starter
+    buildCommand: python -m unittest discover -s tests -q
+    startCommand: python app.py --host 0.0.0.0
+    healthCheckPath: /healthz
+    envVars:
+      - key: PUBLIC_MODE
+        value: "1"
+      - key: DATA_DIR
+        value: /var/data
+      - key: LLM_BASE_URL
+        value: https://api.deepseek.com
+      - key: LLM_MODEL
+        value: deepseek-chat
+      - key: LLM_API_KEY
+        sync: false
+      - key: COOKIE_SECRET
+        generateValue: true
+      - key: HOURLY_TURN_LIMIT
+        value: "20"
+    disk:
+      name: shike-data
+      mountPath: /var/data
+      sizeGB: 1

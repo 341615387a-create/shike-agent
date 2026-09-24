@@ -63,6 +63,29 @@ class CoreTests(unittest.TestCase):
         with self.assertRaises(Conflict):self.svc.create('别的',request)
         self.assertEqual(len(self.svc.list()),1)
 
+    def test_public_workspaces_cannot_list_or_open_each_others_sessions(self):
+        first=self.svc.create('甲的私密想法',uid(),'workspace-a')
+        second=self.svc.create('乙的私密想法',uid(),'workspace-b')
+        self.assertEqual([s['id'] for s in self.svc.list('workspace-a')],[first['id']])
+        self.assertEqual([s['id'] for s in self.svc.list('workspace-b')],[second['id']])
+        self.assertNotIn('owner_id',first)
+        with self.assertRaises(KeyError):self.svc.get(first['id'],'workspace-b')
+        with self.assertRaises(KeyError):
+            self.svc.event(first['id'],{'action':'finish','request_id':uid(),'version':first['version']},'workspace-b')
+
+    def test_public_workspaces_have_separate_profiles_and_cards(self):
+        with self.svc.db() as db:
+            profile=self.svc.read_profile(db,'workspace-a')
+            profile['version']=7
+            self.svc.write_profile(db,profile,'workspace-a')
+            db.execute('INSERT INTO cards VALUES (?,?)',(uid(),json.dumps({
+                'id':uid(),'session_id':'s','owner_id':'workspace-a','title':'甲','text':'私密笔记','at':now()
+            },ensure_ascii=False)))
+        self.assertEqual(self.svc.profile('workspace-a')['version'],7)
+        self.assertEqual(self.svc.profile('workspace-b')['version'],0)
+        self.assertEqual(len(self.svc.cards('workspace-a')),1)
+        self.assertEqual(self.svc.cards('workspace-b'),[])
+
     def test_event_retry_idempotent_even_after_version_change(self):
         s=self.complete(self.new())
         payload={'action':'message','text':'人很多','request_id':uid(),'version':s['version']}
